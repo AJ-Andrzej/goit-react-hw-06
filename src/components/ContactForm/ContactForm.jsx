@@ -1,8 +1,9 @@
 import { Formik, Form, Field, ErrorMessage } from 'formik'
 import { useId } from 'react'
-import { nanoid } from 'nanoid'
+import {addContact} from '../../redux/contactsSlice'
 import * as Yup from 'yup'
 import css from './ContactForm.module.css'
+import { useDispatch } from 'react-redux'
 
 const phoneSchema = "[0-9]{3}-[0-9]{2}-[0-9]{2}"
 const contactsSchema = Yup.object().shape({
@@ -10,14 +11,17 @@ const contactsSchema = Yup.object().shape({
         number: Yup.string().matches(phoneSchema, 'Phone number is not valid').required("This field is required"),
 })
 
-export default function ContactForm({onAdd}) {
+export default function ContactForm() {
+    const dispatch = useDispatch()
     const fieldId = useId()
     const handleSubmit = (values, actions) => {
-        onAdd({
-            id: nanoid(),
+        dispatch(addContact(
+            {
+            // id: nanoid(),
             name: values.name,
             number: values.number,
-        })
+        }
+        ))
         actions.resetForm()
     }
 
